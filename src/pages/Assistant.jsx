@@ -9,6 +9,7 @@ import ChatMessage from "@/components/chat/ChatMessage";
 import InvoicePreview from "@/components/chat/InvoicePreview";
 import RecentFiles from "@/components/chat/RecentFiles";
 import VoiceButton from "@/components/ui/VoiceButton";
+import ConfirmationModal from "@/components/invoice/ConfirmationModal";
 
 export default function Assistant() {
   const [inputValue, setInputValue] = useState("");
@@ -21,6 +22,7 @@ export default function Assistant() {
     }
   ]);
   const [pendingInvoice, setPendingInvoice] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const messagesEndRef = useRef(null);
   const queryClient = useQueryClient();
@@ -69,7 +71,8 @@ export default function Assistant() {
         valor: 1500,
         aliquota_iss: 5,
         valor_iss: 75,
-        status: "pendente"
+        status: "pendente_confirmacao",
+        municipio: "São Paulo - SP"
       };
       
       setPendingInvoice(mockInvoice);
@@ -121,20 +124,32 @@ export default function Assistant() {
 
   const handleConfirmInvoice = async () => {
     if (!pendingInvoice) return;
+    setShowConfirmModal(false);
     setIsProcessing(true);
     
     try {
+      const numeroNFS = `NFS${Date.now().toString().slice(-8)}`;
+      
       await createInvoiceMutation.mutateAsync({
         ...pendingInvoice,
-        status: "emitida",
-        numero: `NFS${Date.now().toString().slice(-8)}`,
-        data_emissao: new Date().toISOString().split('T')[0]
+        status: "autorizada",
+        numero: numeroNFS,
+        data_emissao: new Date().toISOString().split('T')[0],
+        pdf_url: "https://example.com/nfs.pdf", // Mock URL
+        xml_url: "https://example.com/nfs.xml"  // Mock URL
+      });
+
+      // Create success notification
+      await base44.entities.Notification.create({
+        titulo: "Nota fiscal autorizada",
+        mensagem: `NFS-e #${numeroNFS} autorizada pela prefeitura. Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+        tipo: "sucesso"
       });
 
       const aiResponse = {
         id: Date.now(),
         isAI: true,
-        content: "✅ Nota fiscal emitida com sucesso!\n\nNúmero: NFS" + Date.now().toString().slice(-8) + "\nCliente: " + pendingInvoice.cliente_nome + "\nValor: R$ " + pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + "\n\nO PDF e XML já estão disponíveis para download.",
+        content: `✅ Nota fiscal autorizada com sucesso!\n\n📄 Número: ${numeroNFS}\n👤 Cliente: ${pendingInvoice.cliente_nome}\n💰 Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n\n✨ A nota foi enviada para a prefeitura e autorizada. O PDF e XML estão disponíveis na seção "Notas Fiscais".`,
         time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, aiResponse]);
@@ -188,7 +203,7 @@ export default function Assistant() {
           {pendingInvoice && (
             <InvoicePreview
               invoice={pendingInvoice}
-              onConfirm={handleConfirmInvoice}
+              onConfirm={() => setShowConfirmModal(true)}
               onEdit={handleEditInvoice}
               isProcessing={isProcessing}
             />

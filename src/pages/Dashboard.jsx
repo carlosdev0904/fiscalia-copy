@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import StatCard from "@/components/dashboard/StatCard";
 import AlertCard from "@/components/dashboard/AlertCard";
 import RevenueChart from "@/components/dashboard/RevenueChart";
+import MEILimitBar from "@/components/dashboard/MEILimitBar";
 
 export default function Dashboard() {
   const { data: invoices = [] } = useQuery({
@@ -132,6 +133,11 @@ export default function Dashboard() {
           delay={0.3}
         />
       </div>
+
+      {/* MEI Limit Bar */}
+      {company?.regime_tributario === 'MEI' && (
+        <MEILimitBar yearlyRevenue={yearlyRevenue} limit={meiLimit} />
+      )}
 
       {/* Charts and Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

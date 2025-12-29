@@ -12,7 +12,8 @@ import {
   LogOut,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  Receipt
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ export default function Layout({ children, currentPageName }) {
     { name: "Assistente IA", page: "Assistant", icon: MessageSquare },
     { name: "Dashboard", page: "Dashboard", icon: LayoutDashboard },
     { name: "Notas Fiscais", page: "Documents", icon: FileText },
+    { name: "Impostos (DAS)", page: "Taxes", icon: Receipt },
     { name: "Minha Empresa", page: "CompanySetup", icon: Building2 },
     { name: "Notificações", page: "Notifications", icon: Bell, badge: unreadCount },
   ];

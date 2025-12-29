@@ -14,7 +14,8 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  ChevronDown
+  ChevronDown,
+  TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,11 +27,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const statusConfig = {
-  emitida: { label: "Emitida", icon: CheckCircle, color: "text-green-400", bg: "bg-green-500/20" },
-  pendente: { label: "Pendente", icon: Clock, color: "text-yellow-400", bg: "bg-yellow-500/20" },
-  cancelada: { label: "Cancelada", icon: XCircle, color: "text-red-400", bg: "bg-red-500/20" },
-  rejeitada: { label: "Rejeitada", icon: XCircle, color: "text-red-400", bg: "bg-red-500/20" },
   rascunho: { label: "Rascunho", icon: FileText, color: "text-gray-400", bg: "bg-gray-500/20" },
+  pendente_confirmacao: { label: "Aguardando confirmação", icon: Clock, color: "text-yellow-400", bg: "bg-yellow-500/20" },
+  enviada: { label: "Enviada", icon: TrendingUp, color: "text-blue-400", bg: "bg-blue-500/20" },
+  autorizada: { label: "Autorizada", icon: CheckCircle, color: "text-green-400", bg: "bg-green-500/20" },
+  rejeitada: { label: "Rejeitada", icon: XCircle, color: "text-red-400", bg: "bg-red-500/20" },
+  cancelada: { label: "Cancelada", icon: XCircle, color: "text-gray-400", bg: "bg-gray-500/20" },
 };
 
 export default function Documents() {
@@ -115,9 +117,9 @@ export default function Documents() {
       >
         {[
           { label: "Total", value: invoices.length, color: "text-white" },
-          { label: "Emitidas", value: invoices.filter(i => i.status === "emitida").length, color: "text-green-400" },
-          { label: "Pendentes", value: invoices.filter(i => i.status === "pendente").length, color: "text-yellow-400" },
-          { label: "Canceladas", value: invoices.filter(i => i.status === "cancelada").length, color: "text-red-400" },
+          { label: "Autorizadas", value: invoices.filter(i => i.status === "autorizada").length, color: "text-green-400" },
+          { label: "Enviadas", value: invoices.filter(i => i.status === "enviada").length, color: "text-blue-400" },
+          { label: "Rejeitadas", value: invoices.filter(i => i.status === "rejeitada").length, color: "text-red-400" },
         ].map((stat, index) => (
           <div key={stat.label} className="glass-card rounded-xl p-4">
             <p className="text-sm text-gray-500">{stat.label}</p>

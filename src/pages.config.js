@@ -4,6 +4,7 @@ import InvoiceConfirmation from './pages/InvoiceConfirmation';
 import Documents from './pages/Documents';
 import CompanySetup from './pages/CompanySetup';
 import Notifications from './pages/Notifications';
+import Taxes from './pages/Taxes';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +15,7 @@ export const PAGES = {
     "Documents": Documents,
     "CompanySetup": CompanySetup,
     "Notifications": Notifications,
+    "Taxes": Taxes,
 }
 
 export const pagesConfig = {
