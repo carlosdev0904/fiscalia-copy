@@ -5,6 +5,7 @@ import Documents from './pages/Documents';
 import CompanySetup from './pages/CompanySetup';
 import Notifications from './pages/Notifications';
 import Taxes from './pages/Taxes';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "CompanySetup": CompanySetup,
     "Notifications": Notifications,
     "Taxes": Taxes,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

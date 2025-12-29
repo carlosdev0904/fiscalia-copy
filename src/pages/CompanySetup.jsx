@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import FiscalStatusIndicator from "@/components/layout/FiscalStatusIndicator";
 
 const steps = [
   { id: 1, title: "Dados da Empresa", icon: Building2, description: "CNPJ e identificação" },
@@ -358,6 +359,10 @@ export default function CompanySetup() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
+                {/* Fiscal Status */}
+                {company?.id && (
+                  <FiscalStatusIndicator companyId={company.id} />
+                )}
                 <div className="p-6 rounded-2xl bg-gradient-to-r from-orange-500/10 to-purple-500/10 border border-orange-500/20">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">

@@ -13,13 +13,19 @@ import {
   Menu,
   X,
   Sparkles,
-  Receipt
+  Receipt,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import CompanySelector from "@/components/layout/CompanySelector";
+import UserMenu from "@/components/layout/UserMenu";
 
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeCompanyId, setActiveCompanyId] = useState(null);
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -30,6 +36,20 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['notifications'],
     queryFn: () => base44.entities.Notification.filter({ lida: false }),
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ['userSettings'],
+    queryFn: async () => {
+      const allSettings = await base44.entities.UserSettings.list();
+      return allSettings[0];
+    },
+  });
+
+  useEffect(() => {
+    if (settings?.active_company_id) {
+      setActiveCompanyId(settings.active_company_id);
+    }
+  }, [settings]);
 
   const unreadCount = notifications.length;
 
@@ -109,18 +129,42 @@ export default function Layout({ children, currentPageName }) {
       </div>
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-72 glass-card transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 glass-card transform transition-all duration-300 lg:translate-x-0 ${
+        sidebarCollapsed ? 'w-20' : 'w-72'
+      } ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center gap-3 px-6 py-6 border-b border-white/5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center glow-orange">
-              <Sparkles className="w-5 h-5 text-white" />
+          {/* Logo & Collapse Button */}
+          <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center glow-orange flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              {!sidebarCollapsed && (
+                <div className="min-w-0">
+                  <h1 className="text-xl font-bold text-white tracking-tight">Fiscal<span className="text-gradient">AI</span></h1>
+                  <p className="text-xs text-gray-500">Automação Inteligente</p>
+                </div>
+              )}
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Fiscal<span className="text-gradient">AI</span></h1>
-              <p className="text-xs text-gray-500">Automação Inteligente</p>
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex text-gray-400 hover:text-white hover:bg-white/5 flex-shrink-0"
+            >
+              {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </Button>
           </div>
+
+          {/* Company Selector */}
+          {!sidebarCollapsed && (
+            <div className="px-4 py-4 border-b border-white/5">
+              <CompanySelector 
+                activeCompanyId={activeCompanyId}
+                onCompanyChange={setActiveCompanyId}
+              />
+            </div>
+          )}
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
@@ -137,11 +181,15 @@ export default function Layout({ children, currentPageName }) {
                   }`}
                 >
                   <item.icon className={`w-5 h-5 ${isActive ? 'text-orange-500' : 'group-hover:text-orange-400'}`} />
-                  <span className="font-medium">{item.name}</span>
-                  {item.badge > 0 && (
-                    <Badge className="ml-auto bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/20">
-                      {item.badge}
-                    </Badge>
+                  {!sidebarCollapsed && (
+                    <>
+                      <span className="font-medium">{item.name}</span>
+                      {item.badge > 0 && (
+                        <Badge className="ml-auto bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/20">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </>
                   )}
                 </Link>
               );
@@ -150,25 +198,18 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User section */}
           <div className="p-4 border-t border-white/5">
-            <div className="flex items-center gap-3 px-4 py-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
-                <span className="text-sm font-semibold text-white">
-                  {user?.full_name?.charAt(0) || 'U'}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">{user?.full_name || 'Usuário'}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-              </div>
+            {sidebarCollapsed ? (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="text-gray-400 hover:text-white hover:bg-white/5"
+                className="w-full text-gray-400 hover:text-white hover:bg-white/5"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-5 h-5" />
               </Button>
-            </div>
+            ) : (
+              <UserMenu user={user} />
+            )}
           </div>
         </div>
       </aside>
@@ -201,7 +242,9 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       {/* Main content */}
-      <main className="lg:pl-72 min-h-screen pt-16 lg:pt-0">
+      <main className={`min-h-screen pt-16 lg:pt-0 transition-all duration-300 ${
+        sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+      }`}>
         <div className="p-6 lg:p-8">
           {children}
         </div>
