@@ -231,15 +231,23 @@ export default function Dashboard() {
                   </td>
                   <td className="py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      invoice.status === 'emitida' 
+                      invoice.status === 'autorizada' 
                         ? 'bg-green-500/20 text-green-400'
-                        : invoice.status === 'pendente'
+                        : invoice.status === 'enviada'
+                        ? 'bg-blue-500/20 text-blue-400'
+                        : invoice.status === 'pendente_confirmacao'
                         ? 'bg-yellow-500/20 text-yellow-400'
-                        : invoice.status === 'cancelada'
+                        : invoice.status === 'rejeitada'
                         ? 'bg-red-500/20 text-red-400'
+                        : invoice.status === 'cancelada'
+                        ? 'bg-gray-500/20 text-gray-400'
                         : 'bg-gray-500/20 text-gray-400'
                     }`}>
-                      {invoice.status || 'Rascunho'}
+                      {invoice.status === 'autorizada' ? 'Autorizada' :
+                       invoice.status === 'enviada' ? 'Enviada' :
+                       invoice.status === 'pendente_confirmacao' ? 'Pendente' :
+                       invoice.status === 'rejeitada' ? 'Rejeitada' :
+                       invoice.status === 'cancelada' ? 'Cancelada' : 'Rascunho'}
                     </span>
                   </td>
                   <td className="py-4 text-gray-400">{invoice.data_emissao || '---'}</td>
