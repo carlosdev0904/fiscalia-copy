@@ -178,7 +178,7 @@ export default function Assistant() {
       <div className="flex-1 flex flex-col glass-card rounded-3xl overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl btn-gradient-animated flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -249,7 +249,7 @@ export default function Assistant() {
                 onClick={handleSend}
                 disabled={!inputValue.trim() || isProcessing}
                 size="icon"
-                className="absolute right-2 bottom-2 w-10 h-10 btn-gradient-animated rounded-xl disabled:opacity-50"
+                className="absolute right-2 bottom-2 w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-xl disabled:opacity-50"
               >
                 <Send className="w-4 h-4 text-white" />
               </Button>

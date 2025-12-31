@@ -129,18 +129,18 @@ export default function Settings() {
               key={theme.value}
               onClick={() => theme.value === 'dark' && handleThemeChange(theme.value)}
               disabled={theme.value === 'light'}
-              className={`p-4 rounded-xl border text-left transition-smooth ${
+              className={`p-4 rounded-xl border text-left transition-all ${
                 localSettings.theme === theme.value
-                  ? 'border-[#0066FF] bg-[#0066FF]/10'
+                  ? 'border-orange-500 bg-orange-500/10'
                   : 'border-white/10 bg-white/5 hover:border-white/20'
               } ${theme.value === 'light' ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex items-center justify-between">
-                <span className={`font-medium ${localSettings.theme === theme.value ? 'text-[#0066FF]' : 'text-white'}`}>
+                <span className={`font-medium ${localSettings.theme === theme.value ? 'text-orange-400' : 'text-white'}`}>
                   {theme.label}
                 </span>
                 {localSettings.theme === theme.value && (
-                  <Check className="w-5 h-5 text-[#0066FF]" />
+                  <Check className="w-5 h-5 text-orange-400" />
                 )}
               </div>
               <p className="text-xs text-gray-500 mt-1">{theme.desc}</p>
@@ -175,18 +175,18 @@ export default function Settings() {
             <button
               key={size.value}
               onClick={() => handleFontSizeChange(size.value)}
-              className={`p-4 rounded-xl border text-center transition-smooth ${
+              className={`p-4 rounded-xl border text-center transition-all ${
                 localSettings.font_size === size.value
-                  ? 'border-[#0066FF] bg-[#0066FF]/10'
+                  ? 'border-orange-500 bg-orange-500/10'
                   : 'border-white/10 bg-white/5 hover:border-white/20'
               }`}
             >
               <div className="flex items-center justify-center gap-2">
-                <span className={`font-medium ${localSettings.font_size === size.value ? 'text-[#0066FF]' : 'text-white'}`}>
+                <span className={`font-medium ${localSettings.font_size === size.value ? 'text-orange-400' : 'text-white'}`}>
                   {size.label}
                 </span>
                 {localSettings.font_size === size.value && (
-                  <Check className="w-4 h-4 text-[#0066FF]" />
+                  <Check className="w-4 h-4 text-orange-400" />
                 )}
               </div>
             </button>

@@ -93,8 +93,8 @@ export default function Dashboard() {
           transition={{ delay: 0.2 }}
         >
           <Link to={createPageUrl("Assistant")}>
-            <Button className="btn-gradient-animated text-white border-0 h-11 px-6 rounded-xl font-medium">
-              <Sparkles className="w-5 h-5 mr-2" />
+            <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0">
+              <Sparkles className="w-4 h-4 mr-2" />
               Emitir nota com IA
             </Button>
           </Link>

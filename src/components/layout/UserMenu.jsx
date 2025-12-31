@@ -27,7 +27,7 @@ export default function UserMenu({ user }) {
           className="w-full justify-between px-4 py-3 h-auto hover:bg-white/5"
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 rounded-full btn-gradient-animated flex items-center justify-center border-0 flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500/20 to-purple-500/20 flex items-center justify-center border border-white/10 flex-shrink-0">
               <span className="text-sm font-semibold text-white">
                 {user?.full_name?.charAt(0) || 'U'}
               </span>
