@@ -67,65 +67,12 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <style>{`
-        :root {
-          --gradient-start: #1a1a2e;
-          --gradient-end: #0a0a0f;
-          --accent-orange: #f97316;
-          --accent-blue: #3b82f6;
-          --accent-purple: #8b5cf6;
-        }
-        
-        .glass-card {
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .gradient-border {
-          position: relative;
-          background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(139, 92, 246, 0.1));
-        }
-        
-        .gradient-border::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          padding: 1px;
-          background: linear-gradient(135deg, rgba(249, 115, 22, 0.5), rgba(139, 92, 246, 0.5));
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-        }
-        
-        .glow-orange {
-          box-shadow: 0 0 40px rgba(249, 115, 22, 0.15);
-        }
-        
-        .text-gradient {
-          background: linear-gradient(135deg, #f97316, #fb923c);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        
-        .nav-item-active {
-          background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(139, 92, 246, 0.1));
-          border-left: 2px solid #f97316;
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-      `}</style>
+    <div className="min-h-screen bg-[#0A0A0F]">
 
       {/* Background gradient effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-orange-500/10 via-transparent to-transparent blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-purple-500/10 via-transparent to-transparent blur-3xl" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#0066FF]/10 via-transparent to-transparent blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF6B35]/10 via-transparent to-transparent blur-3xl animate-pulse-slow" />
       </div>
 
       {/* Sidebar */}
@@ -136,12 +83,12 @@ export default function Layout({ children, currentPageName }) {
           {/* Logo & Collapse Button */}
           <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center glow-orange flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl btn-gradient-animated flex items-center justify-center glow-blue flex-shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               {!sidebarCollapsed && (
                 <div className="min-w-0">
-                  <h1 className="text-xl font-bold text-white tracking-tight">Fiscal<span className="text-gradient">AI</span></h1>
+                  <h1 className="text-xl font-bold text-white tracking-tight">Fiscal<span className="text-gradient-blue">AI</span></h1>
                   <p className="text-xs text-gray-500">Automação Inteligente</p>
                 </div>
               )}
@@ -174,18 +121,18 @@ export default function Layout({ children, currentPageName }) {
                 <Link
                   key={item.page}
                   to={createPageUrl(item.page)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-smooth ${
                     isActive 
                       ? 'nav-item-active text-white' 
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      : 'text-gray-400 nav-item-hover'
                   }`}
                 >
-                  <item.icon className={`w-5 h-5 ${isActive ? 'text-orange-500' : 'group-hover:text-orange-400'}`} />
+                  <item.icon className={`w-5 h-5 icon-interactive ${isActive ? 'text-[#0066FF]' : 'group-hover:text-white'}`} />
                   {!sidebarCollapsed && (
                     <>
                       <span className="font-medium">{item.name}</span>
                       {item.badge > 0 && (
-                        <Badge className="ml-auto bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/20">
+                        <Badge className="ml-auto bg-[#FF6B35]/20 text-[#FF6B35] border-[#FF6B35]/30">
                           {item.badge}
                         </Badge>
                       )}
@@ -225,10 +172,10 @@ export default function Layout({ children, currentPageName }) {
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg btn-gradient-animated flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-white">Fiscal<span className="text-gradient">AI</span></span>
+          <span className="font-bold text-white">Fiscal<span className="text-gradient-blue">AI</span></span>
         </div>
         <div className="w-10" />
       </header>

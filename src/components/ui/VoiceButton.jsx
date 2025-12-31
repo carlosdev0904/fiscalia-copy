@@ -29,7 +29,7 @@ export default function VoiceButton({ onVoiceInput, disabled }) {
       className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${
         isRecording
           ? 'bg-red-500 text-white'
-          : 'bg-gradient-to-br from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700'
+          : 'btn-gradient-animated text-white'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <AnimatePresence mode="wait">

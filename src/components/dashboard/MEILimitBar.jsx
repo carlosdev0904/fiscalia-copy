@@ -16,9 +16,9 @@ export default function MEILimitBar({ yearlyRevenue = 0, limit = 81000 }) {
   const StatusIcon = status.icon;
 
   const getBarColor = () => {
-    if (percentage >= 90) return "bg-gradient-to-r from-red-500 to-red-600";
-    if (percentage >= 70) return "bg-gradient-to-r from-yellow-500 to-orange-500";
-    return "bg-gradient-to-r from-green-500 to-emerald-500";
+    if (percentage >= 90) return "bg-gradient-to-r from-[#FF6B35] to-red-600";
+    if (percentage >= 70) return "bg-gradient-to-r from-yellow-500 to-[#FF6B35]";
+    return "bg-gradient-to-r from-[#0066FF] to-[#6366F1]";
   };
 
   return (

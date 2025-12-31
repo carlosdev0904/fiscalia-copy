@@ -58,8 +58,8 @@ export default function CompanySelector({ activeCompanyId, onCompanyChange }) {
           className="w-full justify-between px-4 py-6 h-auto hover:bg-white/5"
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/20 to-purple-500/20 flex items-center justify-center border border-white/10 flex-shrink-0">
-              <Building2 className="w-5 h-5 text-orange-400" />
+            <div className="w-10 h-10 rounded-xl btn-gradient-animated flex items-center justify-center border-0 flex-shrink-0">
+              <Building2 className="w-5 h-5 text-white" />
             </div>
             <div className="text-left min-w-0 flex-1">
               <p className="text-sm font-medium text-white truncate">
@@ -97,7 +97,7 @@ export default function CompanySelector({ activeCompanyId, onCompanyChange }) {
                 </div>
               </div>
               {company.id === activeCompanyId && (
-                <Check className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                <Check className="w-4 h-4 text-[#0066FF] flex-shrink-0" />
               )}
             </div>
           </DropdownMenuItem>
@@ -106,7 +106,7 @@ export default function CompanySelector({ activeCompanyId, onCompanyChange }) {
         <DropdownMenuItem asChild>
           <Link
             to={createPageUrl("CompanySetup")}
-            className="text-orange-400 hover:bg-orange-500/10 cursor-pointer flex items-center gap-2"
+            className="text-[#0066FF] hover:bg-[#0066FF]/10 cursor-pointer flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Adicionar nova empresa

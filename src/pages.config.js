@@ -1,23 +1,23 @@
 import Assistant from './pages/Assistant';
-import Dashboard from './pages/Dashboard';
-import InvoiceConfirmation from './pages/InvoiceConfirmation';
-import Documents from './pages/Documents';
 import CompanySetup from './pages/CompanySetup';
+import Dashboard from './pages/Dashboard';
+import Documents from './pages/Documents';
+import InvoiceConfirmation from './pages/InvoiceConfirmation';
 import Notifications from './pages/Notifications';
-import Taxes from './pages/Taxes';
 import Settings from './pages/Settings';
+import Taxes from './pages/Taxes';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Assistant": Assistant,
-    "Dashboard": Dashboard,
-    "InvoiceConfirmation": InvoiceConfirmation,
-    "Documents": Documents,
     "CompanySetup": CompanySetup,
+    "Dashboard": Dashboard,
+    "Documents": Documents,
+    "InvoiceConfirmation": InvoiceConfirmation,
     "Notifications": Notifications,
-    "Taxes": Taxes,
     "Settings": Settings,
+    "Taxes": Taxes,
 }
 
 export const pagesConfig = {

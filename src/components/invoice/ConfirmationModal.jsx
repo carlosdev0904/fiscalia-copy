@@ -25,11 +25,11 @@ export default function ConfirmationModal({ invoice, onConfirm, onCancel, isProc
           className="w-full max-w-2xl glass-card rounded-3xl overflow-hidden"
         >
           {/* Header */}
-          <div className="px-8 py-6 border-b border-white/5 bg-gradient-to-r from-orange-500/10 to-purple-500/10">
+          <div className="px-8 py-6 border-b border-white/5 bg-gradient-to-r from-[#0066FF]/10 to-[#FF6B35]/10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                  <AlertCircle className="w-6 h-6 text-orange-400" />
+                <div className="w-12 h-12 rounded-xl btn-gradient-animated flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">Confirmar Emissão de NFS-e</h2>
@@ -152,7 +152,7 @@ export default function ConfirmationModal({ invoice, onConfirm, onCancel, isProc
             </Button>
             <Button
               onClick={onConfirm}
-              className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 h-12"
+              className="flex-1 btn-gradient-animated text-white border-0 h-12"
               disabled={isProcessing}
             >
               <Check className="w-5 h-5 mr-2" />

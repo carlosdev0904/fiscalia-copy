@@ -262,7 +262,7 @@ export default function Documents() {
                           </div>
                           <div className="flex gap-3 mt-6">
                             {invoice.pdf_url && (
-                              <Button className="bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border-0">
+                              <Button className="btn-gradient-animated text-white border-0">
                                 <Download className="w-4 h-4 mr-2" />
                                 Baixar PDF
                               </Button>

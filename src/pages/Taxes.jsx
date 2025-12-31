@@ -275,7 +275,7 @@ export default function Taxes() {
 
                       <div className="flex gap-3">
                         {das.pdf_url && (
-                          <Button className="bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border-0">
+                          <Button className="btn-gradient-animated text-white border-0">
                             <Download className="w-4 h-4 mr-2" />
                             Baixar Guia PDF
                           </Button>
