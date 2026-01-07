@@ -57,49 +57,62 @@ export default function Assistant() {
     setMessages(prev => [...prev, userMessage]);
     setIsProcessing(true);
 
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Call the real AI function
+      const conversationHistory = messages.map(msg => ({
+        role: msg.isAI ? 'assistant' : 'user',
+        content: msg.content
+      }));
 
-    // Check if it's an invoice request
-    const lowerText = text.toLowerCase();
-    if (lowerText.includes('nota') || lowerText.includes('emitir') || lowerText.includes('fatura')) {
-      // Extract invoice data (simulated)
-      const mockInvoice = {
-        cliente_nome: "João Silva",
-        cliente_documento: "123.456.789-00",
-        descricao_servico: "Consultoria em marketing digital",
-        valor: 1500,
-        aliquota_iss: 5,
-        valor_iss: 75,
-        status: "pendente_confirmacao",
-        municipio: "São Paulo - SP"
-      };
-      
-      setPendingInvoice(mockInvoice);
-      
-      const aiResponse = {
+      const { data } = await base44.functions.invoke('processAICommand', {
+        message: text,
+        conversationHistory
+      });
+
+      if (data.success) {
+        // Add AI response
+        const aiResponse = {
+          id: Date.now() + 1,
+          isAI: true,
+          content: data.explanation,
+          time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, aiResponse]);
+
+        // Handle invoice emission action
+        if (data.action?.type === 'emitir_nfse' && data.action?.data) {
+          const invoiceData = data.action.data;
+          const newInvoice = {
+            cliente_nome: invoiceData.cliente_nome,
+            cliente_documento: invoiceData.cliente_documento,
+            descricao_servico: invoiceData.descricao_servico,
+            valor: invoiceData.valor,
+            aliquota_iss: invoiceData.aliquota_iss || 5,
+            valor_iss: (invoiceData.valor * (invoiceData.aliquota_iss || 5)) / 100,
+            status: "pendente_confirmacao",
+            municipio: invoiceData.municipio || "São Paulo - SP"
+          };
+          setPendingInvoice(newInvoice);
+        }
+      } else {
+        // Handle error from AI
+        const errorResponse = {
+          id: Date.now() + 1,
+          isAI: true,
+          content: data.explanation || "Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.",
+          time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, errorResponse]);
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+      const errorResponse = {
         id: Date.now() + 1,
         isAI: true,
-        content: "Entendi! Preparei uma nota fiscal com base nas informações fornecidas. Por favor, revise os dados abaixo e confirme a emissão:",
+        content: "Desculpe, ocorreu um erro ao processar sua mensagem. Verifique se as configurações da API estão corretas e tente novamente.",
         time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
       };
-      setMessages(prev => [...prev, aiResponse]);
-    } else if (lowerText.includes('faturamento') || lowerText.includes('receita')) {
-      const aiResponse = {
-        id: Date.now() + 1,
-        isAI: true,
-        content: "📊 Resumo do seu faturamento:\n\n• Este mês: R$ 12.450,00\n• Mês anterior: R$ 9.800,00\n• Variação: +27%\n\nVocê está indo muito bem! Quer ver mais detalhes no Dashboard?",
-        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    } else {
-      const aiResponse = {
-        id: Date.now() + 1,
-        isAI: true,
-        content: "Posso ajudá-lo com:\n\n• Emissão de notas fiscais\n• Consulta de faturamento\n• Verificação de impostos\n• Gerenciamento de clientes\n\nTente dizer algo como: \"Emitir nota de R$ 500 para [nome do cliente]\"",
-        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiResponse]);
+      setMessages(prev => [...prev, errorResponse]);
     }
     
     setIsProcessing(false);
