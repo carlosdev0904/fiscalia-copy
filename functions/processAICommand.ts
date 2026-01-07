@@ -115,7 +115,7 @@ Se não entender o comando ou não houver ação clara, retorne:
 
         // Call OpenAI API
         const completion = await openai.chat.completions.create({
-            model: Deno.env.get("OPENAI_MODEL") || 'gpt-4o',
+            model: Deno.env.get("OPENAI_MODEL") || 'gpt-4o-mini',
             messages: messages,
             temperature: 0.7,
             max_tokens: 1000,
