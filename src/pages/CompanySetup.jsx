@@ -43,7 +43,8 @@ export default function CompanySetup() {
     regime_tributario: "",
     certificado_digital: false,
     email: "",
-    telefone: ""
+    telefone: "",
+    inscricao_municipal: ""
   });
   const queryClient = useQueryClient();
 
@@ -67,7 +68,8 @@ export default function CompanySetup() {
         regime_tributario: company.regime_tributario || "",
         certificado_digital: company.certificado_digital || false,
         email: company.email || "",
-        telefone: company.telefone || ""
+        telefone: company.telefone || "",
+        inscricao_municipal: company.inscricao_municipal || ""
       });
     }
   }, [company]);
@@ -314,6 +316,16 @@ export default function CompanySetup() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-400">Inscrição Municipal *</Label>
+                  <Input
+                    value={formData.inscricao_municipal}
+                    onChange={(e) => handleInputChange('inscricao_municipal', e.target.value)}
+                    placeholder="Número da inscrição municipal"
+                    className="bg-white/5 border-white/10 text-white h-12"
+                  />
+                  <p className="text-xs text-gray-500">Obrigatório para emissão de NFS-e</p>
                 </div>
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
                   <div className="flex gap-3">
