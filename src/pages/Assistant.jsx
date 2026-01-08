@@ -141,34 +141,67 @@ export default function Assistant() {
     setIsProcessing(true);
     
     try {
-      const numeroNFS = `NFS${Date.now().toString().slice(-8)}`;
-      
-      await createInvoiceMutation.mutateAsync({
-        ...pendingInvoice,
-        status: "autorizada",
-        numero: numeroNFS,
-        data_emissao: new Date().toISOString().split('T')[0],
-        pdf_url: "https://example.com/nfs.pdf", // Mock URL
-        xml_url: "https://example.com/nfs.xml"  // Mock URL
+      // Get company
+      const companies = await base44.entities.Company.list();
+      const company = companies[0];
+
+      if (!company) {
+        throw new Error('Empresa não configurada');
+      }
+
+      // Call backend to emit invoice
+      const { data } = await base44.functions.invoke('emitirNotaFiscal', {
+        companyId: company.id,
+        cliente_nome: pendingInvoice.cliente_nome,
+        cliente_documento: pendingInvoice.cliente_documento,
+        descricao_servico: pendingInvoice.descricao_servico,
+        valor: pendingInvoice.valor,
+        aliquota_iss: pendingInvoice.aliquota_iss || 5,
+        municipio: pendingInvoice.municipio || company.cidade,
+        data_prestacao: new Date().toISOString().split('T')[0],
+        codigo_servico: '1401'
       });
 
-      // Create success notification
-      await base44.entities.Notification.create({
-        titulo: "Nota fiscal autorizada",
-        mensagem: `NFS-e #${numeroNFS} autorizada pela prefeitura. Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-        tipo: "sucesso"
-      });
+      if (data.success) {
+        const notaFiscal = data.nota_fiscal;
 
-      const aiResponse = {
-        id: Date.now(),
-        isAI: true,
-        content: `✅ Nota fiscal autorizada com sucesso!\n\n📄 Número: ${numeroNFS}\n👤 Cliente: ${pendingInvoice.cliente_nome}\n💰 Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n\n✨ A nota foi enviada para a prefeitura e autorizada. O PDF e XML estão disponíveis na seção "Notas Fiscais".`,
-        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiResponse]);
-      setPendingInvoice(null);
+        // Create success notification
+        await base44.entities.Notification.create({
+          titulo: "Nota fiscal autorizada",
+          mensagem: `NFS-e #${notaFiscal.numero} autorizada pela prefeitura. Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+          tipo: "sucesso",
+          invoice_id: data.invoice_id
+        });
+
+        const aiResponse = {
+          id: Date.now(),
+          isAI: true,
+          content: `✅ Nota fiscal ${notaFiscal.status === 'autorizada' ? 'autorizada' : 'emitida'} com sucesso!\n\n📄 Número: ${notaFiscal.numero}\n👤 Cliente: ${pendingInvoice.cliente_nome}\n💰 Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n${notaFiscal.codigo_verificacao ? `🔐 Código: ${notaFiscal.codigo_verificacao}\n` : ''}\n✨ A nota foi enviada para a prefeitura. ${notaFiscal.pdf_url ? 'O PDF e XML estão disponíveis na seção "Notas Fiscais".' : ''}`,
+          time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, aiResponse]);
+        setPendingInvoice(null);
+      } else {
+        throw new Error(data.message || 'Erro ao emitir nota fiscal');
+      }
     } catch (error) {
       console.error(error);
+      
+      // Create error notification
+      await base44.entities.Notification.create({
+        titulo: "Erro ao emitir nota",
+        mensagem: error.message || 'Erro ao emitir nota fiscal. Tente novamente.',
+        tipo: "erro"
+      });
+
+      const errorResponse = {
+        id: Date.now(),
+        isAI: true,
+        content: `❌ Erro ao emitir nota fiscal: ${error.message || 'Erro desconhecido'}. Por favor, tente novamente ou verifique os dados.`,
+        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, errorResponse]);
+      setPendingInvoice(null);
     }
     
     setIsProcessing(false);

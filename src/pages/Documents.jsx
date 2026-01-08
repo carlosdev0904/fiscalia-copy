@@ -40,10 +40,37 @@ export default function Documents() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ['invoices'],
     queryFn: () => base44.entities.Invoice.list('-created_date'),
   });
+
+  const handleRefreshStatus = async (invoice) => {
+    if (!invoice.id) return;
+    
+    setIsRefreshing(true);
+    try {
+      const { data } = await base44.functions.invoke('consultarStatusNota', {
+        notaId: invoice.id
+      });
+
+      if (data.success) {
+        await base44.entities.Notification.create({
+          titulo: "Status atualizado",
+          mensagem: `Status da nota ${invoice.numero} atualizado para: ${data.status}`,
+          tipo: "info",
+          invoice_id: invoice.id
+        });
+        // Refresh invoices list
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error refreshing status:', error);
+    }
+    setIsRefreshing(false);
+  };
 
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch = 
@@ -213,6 +240,19 @@ export default function Documents() {
 
                       {/* Actions */}
                       <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-gray-400 hover:text-white hover:bg-white/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRefreshStatus(invoice);
+                          }}
+                          disabled={isRefreshing}
+                          title="Atualizar status"
+                        >
+                          <TrendingUp className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"

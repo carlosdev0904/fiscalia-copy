@@ -74,10 +74,43 @@ export default function CompanySetup() {
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
+      let savedCompany;
+      
       if (company?.id) {
-        return base44.entities.Company.update(company.id, data);
+        savedCompany = await base44.entities.Company.update(company.id, data);
+      } else {
+        savedCompany = await base44.entities.Company.create(data);
       }
-      return base44.entities.Company.create(data);
+
+      // If company has required data and not registered in Nuvem Fiscal yet
+      if (savedCompany.cnpj && savedCompany.inscricao_municipal && !savedCompany.nuvem_fiscal_id) {
+        try {
+          const { data: nuvemResult } = await base44.functions.invoke('criarEmpresaNuvemFiscal', {
+            companyId: savedCompany.id,
+            dados_empresa: {
+              razao_social: savedCompany.razao_social,
+              cnpj: savedCompany.cnpj,
+              inscricao_municipal: savedCompany.inscricao_municipal,
+              municipio: savedCompany.cidade,
+              uf: savedCompany.uf,
+              email: savedCompany.email,
+              telefone: savedCompany.telefone
+            }
+          });
+
+          if (nuvemResult.success) {
+            await base44.entities.Notification.create({
+              titulo: "Empresa registrada",
+              mensagem: "Empresa registrada com sucesso na Nuvem Fiscal!",
+              tipo: "sucesso"
+            });
+          }
+        } catch (error) {
+          console.error('Error registering in Nuvem Fiscal:', error);
+        }
+      }
+
+      return savedCompany;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['company'] });
