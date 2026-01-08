@@ -75,7 +75,7 @@ export default function CompanySetup() {
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       let savedCompany;
-
+      
       if (company?.id) {
         savedCompany = await base44.entities.Company.update(company.id, data);
       } else {
@@ -104,20 +104,9 @@ export default function CompanySetup() {
               mensagem: "Empresa registrada com sucesso na Nuvem Fiscal!",
               tipo: "sucesso"
             });
-          } else {
-            await base44.entities.Notification.create({
-              titulo: "Aviso: Registro na Nuvem Fiscal pendente",
-              mensagem: "Empresa salva, mas não foi possível registrar na Nuvem Fiscal. Verifique as credenciais da API.",
-              tipo: "alerta"
-            });
           }
         } catch (error) {
           console.error('Error registering in Nuvem Fiscal:', error);
-          await base44.entities.Notification.create({
-            titulo: "Aviso: Registro na Nuvem Fiscal pendente",
-            mensagem: "Empresa salva, mas não foi possível registrar na Nuvem Fiscal. Verifique as credenciais da API.",
-            tipo: "alerta"
-          });
         }
       }
 
