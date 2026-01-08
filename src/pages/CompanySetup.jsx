@@ -40,6 +40,7 @@ export default function CompanySetup() {
     cidade: "",
     uf: "",
     cnae_principal: "",
+    inscricao_municipal: "",
     regime_tributario: "",
     certificado_digital: false,
     email: "",
@@ -64,6 +65,7 @@ export default function CompanySetup() {
         cidade: company.cidade || "",
         uf: company.uf || "",
         cnae_principal: company.cnae_principal || "",
+        inscricao_municipal: company.inscricao_municipal || "",
         regime_tributario: company.regime_tributario || "",
         certificado_digital: company.certificado_digital || false,
         email: company.email || "",
@@ -344,6 +346,15 @@ export default function CompanySetup() {
                     value={formData.cnae_principal}
                     onChange={(e) => handleInputChange('cnae_principal', e.target.value)}
                     placeholder="0000-0/00 - Descrição da atividade"
+                    className="bg-white/5 border-white/10 text-white h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-gray-400">Inscrição Municipal</Label>
+                  <Input
+                    value={formData.inscricao_municipal}
+                    onChange={(e) => handleInputChange('inscricao_municipal', e.target.value)}
+                    placeholder="Número da inscrição municipal"
                     className="bg-white/5 border-white/10 text-white h-12"
                   />
                 </div>
