@@ -72,6 +72,36 @@ Deno.serve(async (req) => {
             }, { status: 500 });
         }
 
+        // Debug: Log token info (first/last 10 chars only for security)
+        console.log('Using sandbox:', useSandbox);
+        console.log('Token loaded:', nuvemFiscalToken ? `${nuvemFiscalToken.substring(0, 10)}...${nuvemFiscalToken.substring(nuvemFiscalToken.length - 10)}` : 'NULL');
+        console.log('Token length:', nuvemFiscalToken?.length);
+        
+        // Check if token is JWT and if it's expired
+        if (nuvemFiscalToken.startsWith('eyJ')) {
+            try {
+                const tokenParts = nuvemFiscalToken.split('.');
+                if (tokenParts.length === 3) {
+                    const payload = JSON.parse(atob(tokenParts[1]));
+                    const expTimestamp = payload.exp;
+                    const currentTimestamp = Math.floor(Date.now() / 1000);
+                    console.log('Token exp:', expTimestamp, 'Current:', currentTimestamp);
+                    
+                    if (expTimestamp && currentTimestamp > expTimestamp) {
+                        return Response.json({
+                            success: false,
+                            error: 'TOKEN_EXPIRED',
+                            message: 'Token da Nuvem Fiscal expirado',
+                            nuvem_fiscal_id: null,
+                            mensagem: 'Seu token JWT da Nuvem Fiscal expirou. Gere um novo token no dashboard da Nuvem Fiscal (Settings → API) e atualize a variável NUVEM_FISCAL_SANDBOX_TOKEN.'
+                        }, { status: 401 });
+                    }
+                }
+            } catch (e) {
+                console.log('Could not parse JWT token:', e.message);
+            }
+        }
+
         // Prepare company registration data in Nuvem Fiscal format
         const registrationData = {
             cpf_cnpj: dados_empresa.cnpj.replace(/\D/g, ''), // Remove formatting
