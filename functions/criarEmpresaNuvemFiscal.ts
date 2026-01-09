@@ -72,22 +72,33 @@ Deno.serve(async (req) => {
             }, { status: 500 });
         }
 
-        // Prepare company registration data
+        // Prepare company registration data in Nuvem Fiscal format
         const registrationData = {
-            razao_social: dados_empresa.razao_social,
-            cnpj: dados_empresa.cnpj.replace(/\D/g, ''), // Remove formatting
-            inscricao_municipal: dados_empresa.inscricao_municipal,
-            municipio: dados_empresa.municipio,
-            uf: dados_empresa.uf.toUpperCase(),
+            cpf_cnpj: dados_empresa.cnpj.replace(/\D/g, ''), // Remove formatting
+            nome_razao_social: dados_empresa.razao_social,
+            nome_fantasia: dados_empresa.nome_fantasia || dados_empresa.razao_social,
             email: dados_empresa.email,
-            telefone: dados_empresa.telefone.replace(/\D/g, ''), // Remove formatting
-            ambiente: useSandbox ? 'sandbox' : 'producao'
+            fone: dados_empresa.telefone.replace(/\D/g, ''), // Remove formatting
+            inscricao_estadual: "",
+            inscricao_municipal: dados_empresa.inscricao_municipal || "",
+            endereco: {
+                logradouro: dados_empresa.logradouro || "",
+                numero: dados_empresa.numero || "S/N",
+                complemento: dados_empresa.complemento || "",
+                bairro: dados_empresa.bairro || "Centro",
+                cidade: dados_empresa.municipio,
+                uf: dados_empresa.uf.toUpperCase(),
+                codigo_municipio: dados_empresa.codigo_municipio || "",
+                cep: dados_empresa.cep ? dados_empresa.cep.replace(/\D/g, '') : "",
+                codigo_pais: "1058",
+                pais: "Brasil"
+            }
         };
 
-        // Call Nuvem Fiscal API to register company
+        // Call Nuvem Fiscal API to register company (correct endpoint without /v2)
         const nuvemFiscalUrl = useSandbox
-            ? 'https://api.sandbox.nuvemfiscal.com.br/v2/empresas'
-            : 'https://api.nuvemfiscal.com.br/v2/empresas';
+            ? 'https://api.sandbox.nuvemfiscal.com.br/empresas'
+            : 'https://api.nuvemfiscal.com.br/empresas';
 
         const response = await axios.post(
             nuvemFiscalUrl,
