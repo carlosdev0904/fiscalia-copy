@@ -86,8 +86,8 @@ Deno.serve(async (req) => {
 
         // Call Nuvem Fiscal API to register company
         const nuvemFiscalUrl = useSandbox
-            ? 'https://api.sandbox.nuvemfiscal.com.br/empresas'
-            : 'https://api.nuvemfiscal.com.br/empresas';
+            ? 'https://api.sandbox.nuvemfiscal.com.br/v2/empresas'
+            : 'https://api.nuvemfiscal.com.br/v2/empresas';
 
         const response = await axios.post(
             nuvemFiscalUrl,
@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
                 timeout: 30000
             }
         );
-        console.log(response.data);
+
         // Handle response
         if (response.data && response.data.id) {
             const nuvemFiscalId = response.data.id;
