@@ -5,7 +5,7 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
-        console.log(user);
+
         if (!user) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
                 timeout: 30000
             }
         );
-
+        console.log(response.data);
         // Handle response
         if (response.data && response.data.id) {
             const nuvemFiscalId = response.data.id;
