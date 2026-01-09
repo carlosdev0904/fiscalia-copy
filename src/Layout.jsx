@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   MessageSquare,
   LayoutDashboard,
@@ -26,7 +26,6 @@ export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeCompanyId, setActiveCompanyId] = useState(null);
-  const queryClient = useQueryClient();
   
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -64,14 +63,7 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   const handleLogout = async () => {
-    try {
-      // Clear all queries before logout
-      queryClient.clear();
-      await base44.auth.logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-      window.location.href = '/';
-    }
+    await base44.auth.logout();
   };
 
   return (
