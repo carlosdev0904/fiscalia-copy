@@ -86,8 +86,8 @@ Deno.serve(async (req) => {
 
         // Call Nuvem Fiscal API to register company
         const nuvemFiscalUrl = useSandbox
-            ? 'https://api.sandbox.nuvemfiscal.com.br/v2/empresas'
-            : 'https://api.nuvemfiscal.com.br/v2/empresas';
+            ? 'https://api.sandbox.nuvemfiscal.com.br/empresas'
+            : 'https://api.nuvemfiscal.com.br/empresas';
 
         const response = await axios.post(
             nuvemFiscalUrl,
