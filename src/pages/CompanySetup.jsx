@@ -151,6 +151,21 @@ export default function CompanySetup() {
     }
   };
 
+  const handleCertificateUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file && file.name.endsWith('.pfx')) {
+      setCertificateFile(file);
+      handleInputChange('certificado_digital', true);
+      toast.success(`Certificado ${file.name} selecionado com sucesso!`);
+    } else {
+      toast.error('Por favor, selecione um arquivo .pfx válido');
+    }
+  };
+
   const formatCNPJ = (value) => {
     const cleaned = value.replace(/\D/g, '');
     const match = cleaned.match(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})$/);
