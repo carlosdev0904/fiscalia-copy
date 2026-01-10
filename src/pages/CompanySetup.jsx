@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "./utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import {
   Building2,
   FileText,
@@ -47,6 +50,7 @@ export default function CompanySetup() {
     inscricao_municipal: ""
   });
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: company, isLoading } = useQuery({
     queryKey: ['company'],
@@ -77,6 +81,7 @@ export default function CompanySetup() {
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       let savedCompany;
+      const isNewCompany = !company?.id;
       
       if (company?.id) {
         savedCompany = await base44.entities.Company.update(company.id, data);
@@ -112,10 +117,17 @@ export default function CompanySetup() {
         }
       }
 
-      return savedCompany;
+      return { savedCompany, isNewCompany };
     },
-    onSuccess: () => {
+    onSuccess: ({ isNewCompany }) => {
       queryClient.invalidateQueries({ queryKey: ['company'] });
+      
+      if (isNewCompany) {
+        toast.success('Nova empresa registrada com sucesso!');
+        setTimeout(() => {
+          navigate(createPageUrl('Dashboard'));
+        }, 1500);
+      }
     }
   });
 
