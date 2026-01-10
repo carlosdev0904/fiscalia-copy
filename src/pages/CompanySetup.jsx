@@ -490,10 +490,10 @@ export default function CompanySetup() {
 
                   <button
                     onClick={handleConfigureLater}
-                    className={`w-full p-5 rounded-xl border text-left transition-all duration-200 ${
+                    className={`w-full p-5 rounded-xl border text-left transition-all duration-200 hover:scale-[1.02] ${
                       !formData.certificado_digital
-                        ? 'border-orange-500 bg-orange-500/10'
-                        : 'border-white/10 bg-white/5 hover:bg-orange-500/10 hover:border-orange-500/50 hover:scale-[1.02]'
+                        ? 'border-orange-500 bg-orange-500/10 hover:bg-orange-500/20 hover:border-orange-500'
+                        : 'border-white/10 bg-white/5 hover:bg-orange-500/10 hover:border-orange-500/50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
