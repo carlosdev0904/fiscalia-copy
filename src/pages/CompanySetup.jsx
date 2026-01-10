@@ -161,9 +161,14 @@ export default function CompanySetup() {
       setCertificateFile(file);
       handleInputChange('certificado_digital', true);
       toast.success(`Certificado ${file.name} selecionado com sucesso!`);
-    } else {
+    } else if (file) {
       toast.error('Por favor, selecione um arquivo .pfx válido');
     }
+  };
+
+  const handleConfigureLater = () => {
+    setCertificateFile(null);
+    handleInputChange('certificado_digital', false);
   };
 
   const formatCNPJ = (value) => {
