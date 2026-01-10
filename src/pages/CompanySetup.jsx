@@ -463,10 +463,10 @@ export default function CompanySetup() {
                 <div className="space-y-4">
                   <button
                     onClick={handleCertificateUpload}
-                    className={`w-full p-5 rounded-xl border text-left transition-all ${
+                    className={`w-full p-5 rounded-xl border text-left transition-all duration-200 ${
                       formData.certificado_digital
                         ? 'border-green-500 bg-green-500/10'
-                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -485,10 +485,10 @@ export default function CompanySetup() {
 
                   <button
                     onClick={() => handleInputChange('certificado_digital', false)}
-                    className={`w-full p-5 rounded-xl border text-left transition-all ${
+                    className={`w-full p-5 rounded-xl border text-left transition-all duration-200 ${
                       !formData.certificado_digital
                         ? 'border-orange-500 bg-orange-500/10'
-                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:scale-[1.02]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
