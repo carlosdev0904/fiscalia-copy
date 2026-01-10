@@ -452,9 +452,17 @@ export default function CompanySetup() {
                   </div>
                 </div>
 
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pfx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                
                 <div className="space-y-4">
                   <button
-                    onClick={() => handleInputChange('certificado_digital', true)}
+                    onClick={handleCertificateUpload}
                     className={`w-full p-5 rounded-xl border text-left transition-all ${
                       formData.certificado_digital
                         ? 'border-green-500 bg-green-500/10'
@@ -464,7 +472,9 @@ export default function CompanySetup() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Check className={`w-5 h-5 ${formData.certificado_digital ? 'text-green-400' : 'text-gray-500'}`} />
-                        <span className="font-medium text-white">Configurar certificado agora</span>
+                        <span className="font-medium text-white">
+                          {certificateFile ? certificateFile.name : 'Configurar certificado agora'}
+                        </span>
                       </div>
                       <ChevronRight className="w-5 h-5 text-gray-500" />
                     </div>
