@@ -46,15 +46,33 @@ export default function Dashboard() {
   const monthlyTax = monthlyInvoices.reduce((sum, inv) => sum + (inv.valor_iss || 0), 0);
   const totalInvoices = monthlyInvoices.length;
 
-  // Chart data
-  const chartData = [
-    { month: 'Jul', value: 8500 },
-    { month: 'Ago', value: 9200 },
-    { month: 'Set', value: 7800 },
-    { month: 'Out', value: 11500 },
-    { month: 'Nov', value: 9800 },
-    { month: 'Dez', value: monthlyRevenue || 12450 },
-  ];
+  // Chart data - Calculate last 6 months revenue
+  const chartData = React.useMemo(() => {
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const now = new Date();
+    const last6Months = [];
+    
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthIndex = date.getMonth();
+      const year = date.getFullYear();
+      
+      const monthRevenue = invoices
+        .filter(inv => {
+          if (!inv.data_emissao) return false;
+          const invDate = new Date(inv.data_emissao);
+          return invDate.getMonth() === monthIndex && invDate.getFullYear() === year;
+        })
+        .reduce((sum, inv) => sum + (inv.valor || 0), 0);
+      
+      last6Months.push({
+        month: months[monthIndex],
+        value: monthRevenue
+      });
+    }
+    
+    return last6Months;
+  }, [invoices]);
 
   // MEI limit check (R$ 81.000 / year)
   const meiLimit = 81000;
