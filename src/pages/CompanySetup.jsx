@@ -49,6 +49,8 @@ export default function CompanySetup() {
     telefone: "",
     inscricao_municipal: ""
   });
+  const [certificateFile, setCertificateFile] = useState(null);
+  const fileInputRef = React.useRef(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
