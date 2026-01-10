@@ -489,7 +489,7 @@ export default function CompanySetup() {
                   </button>
 
                   <button
-                    onClick={() => handleInputChange('certificado_digital', false)}
+                    onClick={handleConfigureLater}
                     className={`w-full p-5 rounded-xl border text-left transition-all duration-200 ${
                       !formData.certificado_digital
                         ? 'border-orange-500 bg-orange-500/10'
