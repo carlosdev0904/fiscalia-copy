@@ -249,7 +249,7 @@ export default function Assistant() {
           {pendingInvoice && (
             <InvoicePreview
               invoice={pendingInvoice}
-              onConfirm={() => setShowConfirmModal(true)}
+              onConfirm={handleConfirmInvoice}
               onEdit={handleEditInvoice}
               isProcessing={isProcessing}
             />
