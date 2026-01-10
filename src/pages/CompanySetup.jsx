@@ -436,14 +436,32 @@ export default function CompanySetup() {
                 </div>
 
                 <div className="space-y-4">
-                  <button
-                    onClick={() => handleInputChange('certificado_digital', true)}
-                    className={`w-full p-5 rounded-xl border text-left transition-all ${
+                  <label
+                    className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
                       formData.certificado_digital
                         ? 'border-green-500 bg-green-500/10'
                         : 'border-white/10 bg-white/5 hover:border-white/20'
                     }`}
                   >
+                    <input
+                      type="file"
+                      accept=".pfx,.p12"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            toast.loading('Fazendo upload do certificado...');
+                            const { data } = await base44.integrations.Core.UploadFile({ file });
+                            handleInputChange('certificado_digital', true);
+                            toast.success('Certificado enviado com sucesso!');
+                          } catch (error) {
+                            toast.error('Erro ao fazer upload do certificado');
+                            console.error(error);
+                          }
+                        }
+                      }}
+                    />
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Check className={`w-5 h-5 ${formData.certificado_digital ? 'text-green-400' : 'text-gray-500'}`} />
@@ -454,7 +472,7 @@ export default function CompanySetup() {
                     <p className="text-sm text-gray-500 mt-2 ml-8">
                       Faça upload do seu certificado A1 (.pfx)
                     </p>
-                  </button>
+                  </label>
 
                   <button
                     onClick={() => handleInputChange('certificado_digital', false)}
