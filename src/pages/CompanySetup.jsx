@@ -59,7 +59,7 @@ export default function CompanySetup() {
   const isNewCompany = urlParams.get('new') === 'true';
 
   const { data: company, isLoading } = useQuery({
-    queryKey: ['company'],
+    queryKey: ['company', isNewCompany],
     queryFn: async () => {
       if (isNewCompany) return null; // Return null for new company
       const companies = await base44.entities.Company.list();
@@ -68,7 +68,7 @@ export default function CompanySetup() {
   });
 
   useEffect(() => {
-    if (company) {
+    if (company && !isNewCompany) {
       setFormData({
         cnpj: company.cnpj || "",
         razao_social: company.razao_social || "",
@@ -82,7 +82,7 @@ export default function CompanySetup() {
         telefone: company.telefone || "",
         inscricao_municipal: company.inscricao_municipal || ""
       });
-    } else {
+    } else if (isNewCompany || !company) {
       // Reset form for new company
       setFormData({
         cnpj: "",
@@ -100,7 +100,7 @@ export default function CompanySetup() {
       setCertificateFile(null);
       setCurrentStep(1);
     }
-  }, [company]);
+  }, [company, isNewCompany]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
