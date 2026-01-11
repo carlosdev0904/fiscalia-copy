@@ -45,6 +45,9 @@ export default function CompanySelector({ activeCompanyId, onCompanyChange }) {
   const activeCompany = companies.find(c => c.id === activeCompanyId) || companies[0];
 
   const handleCompanyChange = async (companyId) => {
+    // Don't reload if clicking the already active company
+    if (companyId === activeCompanyId) return;
+    
     await updateSettingsMutation.mutateAsync({ active_company_id: companyId });
     onCompanyChange?.(companyId);
     window.location.reload(); // Reload to refresh all data
