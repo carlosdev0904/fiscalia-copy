@@ -77,6 +77,23 @@ export default function CompanySetup() {
         telefone: company.telefone || "",
         inscricao_municipal: company.inscricao_municipal || ""
       });
+    } else {
+      // Reset form for new company
+      setFormData({
+        cnpj: "",
+        razao_social: "",
+        nome_fantasia: "",
+        cidade: "",
+        uf: "",
+        cnae_principal: "",
+        regime_tributario: "",
+        certificado_digital: false,
+        email: "",
+        telefone: "",
+        inscricao_municipal: ""
+      });
+      setCertificateFile(null);
+      setCurrentStep(1);
     }
   }, [company]);
 
