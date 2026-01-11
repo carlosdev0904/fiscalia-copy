@@ -105,7 +105,7 @@ export default function CompanySelector({ activeCompanyId, onCompanyChange }) {
         <DropdownMenuSeparator className="bg-white/5" />
         <DropdownMenuItem asChild>
           <Link
-            to={createPageUrl("CompanySetup")}
+            to={createPageUrl("CompanySetup") + "?new=true"}
             className="text-orange-400 hover:bg-orange-500/10 cursor-pointer flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />

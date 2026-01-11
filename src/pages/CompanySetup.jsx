@@ -54,9 +54,14 @@ export default function CompanySetup() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  // Check if creating new company
+  const urlParams = new URLSearchParams(window.location.search);
+  const isNewCompany = urlParams.get('new') === 'true';
+
   const { data: company, isLoading } = useQuery({
     queryKey: ['company'],
     queryFn: async () => {
+      if (isNewCompany) return null; // Return null for new company
       const companies = await base44.entities.Company.list();
       return companies[0];
     },
