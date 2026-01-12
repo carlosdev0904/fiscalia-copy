@@ -1,5 +1,4 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import { getNuvemFiscalToken } from './_getNuvemFiscalToken.js';
 
 /**
  * Base44 Backend Function: createFiscalCloudCompany
@@ -59,10 +58,61 @@ Deno.serve(async (req) => {
 
     // Get Nuvem Fiscal OAuth token
     const useSandbox = Deno.env.get('NUVEM_FISCAL_USE_SANDBOX') !== 'false';
-    
+
+    const clientId = useSandbox
+      ? Deno.env.get('NUVEM_FISCAL_SANDBOX_CLIENT_ID')
+      : Deno.env.get('NUVEM_FISCAL_PRODUCTION_CLIENT_ID');
+
+    const clientSecret = useSandbox
+      ? Deno.env.get('NUVEM_FISCAL_SANDBOX_CLIENT_SECRET')
+      : Deno.env.get('NUVEM_FISCAL_PRODUCTION_CLIENT_SECRET');
+
+    if (!clientId || !clientSecret) {
+      return Response.json({
+        status: "error",
+        message: "Credenciais da Nuvem Fiscal não configuradas"
+      }, { status: 500 });
+    }
+
+    // OAuth 2.0 - Get access token
+    const tokenUrl = 'https://auth.nuvemfiscal.com.br/oauth/token';
+    const scopes = 'empresa cep cnpj nfse';
+
+    const tokenBody = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+      scope: scopes
+    });
+
     let nuvemFiscalToken;
     try {
-      nuvemFiscalToken = await getNuvemFiscalToken(useSandbox);
+      const tokenResponse = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: tokenBody.toString()
+      });
+
+      if (!tokenResponse.ok) {
+        const errorData = await tokenResponse.text();
+        console.error('OAuth error:', errorData);
+        return Response.json({
+          status: "error",
+          message: "Erro de autenticação com a Nuvem Fiscal"
+        }, { status: 500 });
+      }
+
+      const tokenData = await tokenResponse.json();
+      nuvemFiscalToken = tokenData.access_token;
+
+      if (!nuvemFiscalToken) {
+        return Response.json({
+          status: "error",
+          message: "Token de acesso não retornado"
+        }, { status: 500 });
+      }
     } catch (error) {
       console.error('Error getting Nuvem Fiscal token:', error);
       return Response.json({
