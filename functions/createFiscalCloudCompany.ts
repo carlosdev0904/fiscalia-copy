@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { getNuvemFiscalToken } from './_getNuvemFiscalToken.js';
 
 /**
  * Base44 Backend Function: createFiscalCloudCompany
@@ -56,16 +57,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Get Nuvem Fiscal token
+    // Get Nuvem Fiscal OAuth token
     const useSandbox = Deno.env.get('NUVEM_FISCAL_USE_SANDBOX') !== 'false';
-    const nuvemFiscalToken = useSandbox
-      ? Deno.env.get('NUVEM_FISCAL_SANDBOX_TOKEN')
-      : Deno.env.get('NUVEM_FISCAL_PRODUCTION_TOKEN');
-
-    if (!nuvemFiscalToken) {
+    
+    let nuvemFiscalToken;
+    try {
+      nuvemFiscalToken = await getNuvemFiscalToken(useSandbox);
+    } catch (error) {
+      console.error('Error getting Nuvem Fiscal token:', error);
       return Response.json({
         status: "error",
-        message: "Token da Nuvem Fiscal não configurado"
+        message: "Erro de autenticação com a Nuvem Fiscal. Verifique as credenciais."
       }, { status: 500 });
     }
 
