@@ -128,23 +128,35 @@ Deno.serve(async (req) => {
       cpf_cnpj: params.dados_empresa.cnpj.replace(/\D/g, ''),
       nome_razao_social: params.dados_empresa.razao_social,
       nome_fantasia: params.dados_empresa.nome_fantasia || params.dados_empresa.razao_social,
-      inscricao_municipal: params.dados_empresa.inscricao_municipal,
-      inscricao_estadual: params.dados_empresa.inscricao_estadual || '',
-      endereco: {
-        logradouro: params.dados_empresa.logradouro || 'Rua Principal',
-        numero: params.dados_empresa.numero || '100',
-        complemento: params.dados_empresa.complemento || '',
-        bairro: params.dados_empresa.bairro || 'Centro',
-        codigo_municipio: params.dados_empresa.codigo_municipio || '3550308',
-        cidade: params.dados_empresa.municipio,
-        uf: params.dados_empresa.uf.toUpperCase(),
-        cep: params.dados_empresa.cep ? params.dados_empresa.cep.replace(/\D/g, '') : '01000000',
-        pais: 'Brasil',
-        codigo_pais: '1058'
-      },
       email: params.dados_empresa.email,
       telefone: params.dados_empresa.telefone.replace(/\D/g, '')
     };
+
+    // Add optional fields only if provided
+    if (params.dados_empresa.inscricao_municipal) {
+      registrationData.inscricao_municipal = params.dados_empresa.inscricao_municipal;
+    }
+    
+    if (params.dados_empresa.inscricao_estadual) {
+      registrationData.inscricao_estadual = params.dados_empresa.inscricao_estadual;
+    }
+
+    // Build address object with required fields only
+    const endereco = {
+      logradouro: params.dados_empresa.logradouro || 'Rua Principal',
+      numero: params.dados_empresa.numero || '100',
+      bairro: params.dados_empresa.bairro || 'Centro',
+      codigo_municipio: params.dados_empresa.codigo_municipio || '3550308',
+      uf: params.dados_empresa.uf.toUpperCase(),
+      cep: params.dados_empresa.cep ? params.dados_empresa.cep.replace(/\D/g, '') : '01000000'
+    };
+
+    // Add optional address fields
+    if (params.dados_empresa.complemento) {
+      endereco.complemento = params.dados_empresa.complemento;
+    }
+
+    registrationData.endereco = endereco;
 
     // Call Nuvem Fiscal API to register company
     const nuvemFiscalUrl = useSandbox
