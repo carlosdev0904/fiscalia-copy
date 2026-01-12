@@ -237,7 +237,7 @@ export default function CompanySetup() {
       >
         <div className="flex items-center justify-between">
           {steps.map((step, index) => (
-            <React.Fragment key={step.id}>
+            <div key={step.id} className="flex items-center flex-1">
               <div className="flex items-center gap-3">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
                   currentStep >= step.id
@@ -262,7 +262,7 @@ export default function CompanySetup() {
                   currentStep > step.id ? 'bg-orange-500' : 'bg-white/10'
                 }`} />
               )}
-            </React.Fragment>
+            </div>
           ))}
         </div>
       </motion.div>
