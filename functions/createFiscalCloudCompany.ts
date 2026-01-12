@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
 
     let response;
     try {
-      console.log("nuvemFiscalToken", nuvemFiscalToken)
+      console.log("nuvemFiscalToken", nuvemFiscalToken, registrationData)
       response = await fetch(nuvemFiscalUrl, {
         method: 'POST',
         headers: {
