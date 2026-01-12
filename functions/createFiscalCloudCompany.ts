@@ -95,6 +95,8 @@ Deno.serve(async (req) => {
         body: tokenBody.toString()
       });
 
+      console.log("weesdfwefwefsdfwersdfsefs" ,tokenResponse);
+
       if (!tokenResponse.ok) {
         const errorData = await tokenResponse.text();
         console.error('OAuth error:', errorData);
