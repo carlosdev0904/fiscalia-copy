@@ -121,16 +121,27 @@ Deno.serve(async (req) => {
       }, { status: 500 });
     }
 
-    // Prepare company registration data
+    // Prepare company registration data per Nuvem Fiscal API spec
     const registrationData = {
-      razao_social: params.dados_empresa.razao_social,
-      cnpj: params.dados_empresa.cnpj.replace(/\D/g, ''),
+      cpf_cnpj: params.dados_empresa.cnpj.replace(/\D/g, ''),
+      nome_razao_social: params.dados_empresa.razao_social,
+      nome_fantasia: params.dados_empresa.nome_fantasia || params.dados_empresa.razao_social,
       inscricao_municipal: params.dados_empresa.inscricao_municipal,
-      municipio: params.dados_empresa.municipio,
-      uf: params.dados_empresa.uf.toUpperCase(),
+      inscricao_estadual: params.dados_empresa.inscricao_estadual || '',
+      endereco: {
+        logradouro: params.dados_empresa.logradouro || 'Rua Principal',
+        numero: params.dados_empresa.numero || '100',
+        complemento: params.dados_empresa.complemento || '',
+        bairro: params.dados_empresa.bairro || 'Centro',
+        codigo_municipio: params.dados_empresa.codigo_municipio || '3550308',
+        cidade: params.dados_empresa.municipio,
+        uf: params.dados_empresa.uf.toUpperCase(),
+        cep: params.dados_empresa.cep ? params.dados_empresa.cep.replace(/\D/g, '') : '01000000',
+        pais: 'Brasil',
+        codigo_pais: '1058'
+      },
       email: params.dados_empresa.email,
-      telefone: params.dados_empresa.telefone.replace(/\D/g, ''),
-      ambiente: useSandbox ? 'sandbox' : 'producao'
+      telefone: params.dados_empresa.telefone.replace(/\D/g, '')
     };
 
     // Call Nuvem Fiscal API to register company
