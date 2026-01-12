@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       response = await fetch(nuvemFiscalUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `nuvemFiscalToken ${nuvemFiscalToken}`,
+          'Authorization': `Bearer ${nuvemFiscalToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(registrationData),
