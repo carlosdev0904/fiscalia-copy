@@ -31,16 +31,25 @@ Deno.serve(async (req) => {
 
     // Get Nuvem Fiscal token
     const useSandbox = Deno.env.get('NUVEM_FISCAL_USE_SANDBOX') !== 'false';
-    const nuvemFiscalToken = useSandbox
+    const rawToken = useSandbox
       ? Deno.env.get('NUVEM_FISCAL_SANDBOX_TOKEN')
       : Deno.env.get('NUVEM_FISCAL_PRODUCTION_TOKEN');
 
-    if (!nuvemFiscalToken) {
+    if (!rawToken) {
       return Response.json({
         status: "error",
         message: "Token da Nuvem Fiscal não configurado"
       }, { status: 500 });
     }
+
+    // Clean token: remove spaces, quotes, and line breaks
+    const nuvemFiscalToken = rawToken.trim().replace(/["'\s\n\r]/g, '');
+    
+    // Debug logs (show only first/last 10 chars for security)
+    console.log('Environment:', useSandbox ? 'SANDBOX' : 'PRODUCTION');
+    console.log('Token length:', nuvemFiscalToken.length);
+    console.log('Token preview:', `${nuvemFiscalToken.substring(0, 15)}...${nuvemFiscalToken.substring(nuvemFiscalToken.length - 15)}`);
+    console.log('Token starts with eyJ:', nuvemFiscalToken.startsWith('eyJ'));
 
     // Call Nuvem Fiscal API health check
     const nuvemFiscalUrl = useSandbox
@@ -67,9 +76,15 @@ Deno.serve(async (req) => {
       isConnected = response.ok;
 
       if (!isConnected) {
+        console.log('Response status:', response.status);
+        const responseText = await response.text();
+        console.log('Response body:', responseText);
+        
         if (response.status === 401 || response.status === 403) {
-          errorMessage = 'Erro de autenticação';
+          errorMessage = 'Erro de autenticação. Verifique se o token é válido e não expirou.';
         }
+      } else {
+        console.log('✅ Connection successful!');
       }
     } catch (error) {
       clearTimeout(timeoutId);
