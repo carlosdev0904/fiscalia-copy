@@ -53,8 +53,8 @@ Deno.serve(async (req) => {
 
     // Call Nuvem Fiscal API health check
     const nuvemFiscalUrl = useSandbox
-      ? 'https://api.sandbox.nuvemfiscal.com.br/empresas'
-      : 'https://api.nuvemfiscal.com.br/empresas';
+      ? 'https://api.sandbox.nuvemfiscal.com.br/v1/empresas'
+      : 'https://api.nuvemfiscal.com.br/v1/empresas';
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
