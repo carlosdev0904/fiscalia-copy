@@ -150,7 +150,7 @@ export default function Assistant() {
       }
 
       // Call backend to emit invoice
-      const { data } = await base44.functions.invoke('emitirNotaFiscal', {
+      const { data } = await base44.functions.invoke('issueInvoice', {
         companyId: company.id,
         cliente_nome: pendingInvoice.cliente_nome,
         cliente_documento: pendingInvoice.cliente_documento,
@@ -162,8 +162,8 @@ export default function Assistant() {
         codigo_servico: '1401'
       });
 
-      if (data.success) {
-        const notaFiscal = data.nota_fiscal;
+      if (data.status === 'success') {
+        const notaFiscal = data.invoice;
 
         // Create success notification
         await base44.entities.Notification.create({
@@ -176,7 +176,7 @@ export default function Assistant() {
         const aiResponse = {
           id: Date.now(),
           isAI: true,
-          content: `✅ Nota fiscal ${notaFiscal.status === 'autorizada' ? 'autorizada' : 'emitida'} com sucesso!\n\n📄 Número: ${notaFiscal.numero}\n👤 Cliente: ${pendingInvoice.cliente_nome}\n💰 Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n${notaFiscal.codigo_verificacao ? `🔐 Código: ${notaFiscal.codigo_verificacao}\n` : ''}\n✨ A nota foi enviada para a prefeitura. ${notaFiscal.pdf_url ? 'O PDF e XML estão disponíveis na seção "Notas Fiscais".' : ''}`,
+          content: `✅ Nota fiscal ${notaFiscal.status === 'autorizada' ? 'autorizada' : 'emitida'} com sucesso!\n\n📄 Número: ${notaFiscal.numero || '---'}\n👤 Cliente: ${pendingInvoice.cliente_nome}\n💰 Valor: R$ ${pendingInvoice.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n${notaFiscal.codigo_verificacao ? `🔐 Código: ${notaFiscal.codigo_verificacao}\n` : ''}\n✨ A nota foi enviada para a prefeitura. ${notaFiscal.pdf_url ? 'O PDF e XML estão disponíveis na seção "Notas Fiscais".' : ''}`,
           time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
         };
         setMessages(prev => [...prev, aiResponse]);

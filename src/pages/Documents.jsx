@@ -52,14 +52,15 @@ export default function Documents() {
     
     setIsRefreshing(true);
     try {
-      const { data } = await base44.functions.invoke('consultarStatusNota', {
-        notaId: invoice.id
+      const { data } = await base44.functions.invoke('checkInvoiceStatus', {
+        invoiceId: invoice.id,
+        nuvemFiscalId: invoice.nuvem_fiscal_id
       });
 
-      if (data.success) {
+      if (data.status === 'success') {
         await base44.entities.Notification.create({
           titulo: "Status atualizado",
-          mensagem: `Status da nota ${invoice.numero} atualizado para: ${data.status}`,
+          mensagem: `Status da nota ${invoice.numero} atualizado`,
           tipo: "info",
           invoice_id: invoice.id
         });
