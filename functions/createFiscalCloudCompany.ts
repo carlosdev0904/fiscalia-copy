@@ -216,10 +216,12 @@ Deno.serve(async (req) => {
     }
 
     const responseData = await response.json();
+    console.log('Nuvem Fiscal response:', JSON.stringify(responseData, null, 2));
 
-    if (responseData && responseData.id) {
-      const nuvemFiscalId = responseData.id;
+    // Check for ID in response (could be 'id' or 'cpf_cnpj')
+    const nuvemFiscalId = responseData.id || responseData.cpf_cnpj;
 
+    if (nuvemFiscalId) {
       // Persist Nuvem Fiscal ID in Base44 database
       await base44.asServiceRole.entities.Company.update(params.companyId, {
         nuvem_fiscal_id: nuvemFiscalId,
@@ -228,12 +230,15 @@ Deno.serve(async (req) => {
 
       return Response.json({
         status: "success",
-        message: "Empresa registrada na Nuvem Fiscal com sucesso"
+        message: "Empresa registrada na Nuvem Fiscal com sucesso",
+        data: responseData
       });
     } else {
+      console.error('Invalid response structure:', responseData);
       return Response.json({
         status: "error",
-        message: "Resposta inválida da Nuvem Fiscal"
+        message: "Resposta inválida da Nuvem Fiscal",
+        debug: responseData
       }, { status: 500 });
     }
 
