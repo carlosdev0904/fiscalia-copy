@@ -83,8 +83,8 @@ Deno.serve(async (req) => {
 
     // Call Nuvem Fiscal API to register company
     const nuvemFiscalUrl = useSandbox
-      ? 'https://api.sandbox.nuvemfiscal.com.br/v2/empresas'
-      : 'https://api.nuvemfiscal.com.br/v2/empresas';
+      ? 'https://api.sandbox.nuvemfiscal.com.br/'
+      : 'https://api.nuvemfiscal.com.br/';
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
