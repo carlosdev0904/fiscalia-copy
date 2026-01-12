@@ -200,14 +200,28 @@ Deno.serve(async (req) => {
       console.error('Nuvem Fiscal API Error:', JSON.stringify(errorData, null, 2));
       console.error('Request data sent:', JSON.stringify(registrationData, null, 2));
       
+      // Check if company already exists
+      if (errorData?.error?.code === 'EmpresaAlreadyExists' || response.status === 409) {
+        // Company already registered - treat as success
+        const cnpj = params.dados_empresa.cnpj.replace(/\D/g, '');
+        
+        await base44.asServiceRole.entities.Company.update(params.companyId, {
+          nuvem_fiscal_id: cnpj,
+          nuvem_fiscal_registered_at: new Date().toISOString()
+        });
+
+        return Response.json({
+          status: "success",
+          message: "Empresa já estava registrada na Nuvem Fiscal"
+        });
+      }
+      
       let userMessage = 'Erro ao registrar empresa';
 
       if (response.status === 401 || response.status === 403) {
         userMessage = 'Erro de autenticação';
       } else if (response.status === 400) {
-        userMessage = errorData?.mensagem || errorData?.message || 'Dados inválidos';
-      } else if (response.status === 409) {
-        userMessage = 'Empresa já registrada';
+        userMessage = errorData?.error?.message || errorData?.mensagem || errorData?.message || 'Dados inválidos';
       } else if (response.status >= 500) {
         userMessage = 'Erro no servidor da Nuvem Fiscal';
       }
