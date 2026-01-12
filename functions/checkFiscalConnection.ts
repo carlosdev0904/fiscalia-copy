@@ -20,6 +20,7 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const params = await req.json();
+    console.log(params);
 
     // Validate minimum required data
     if (!params.companyId) {
