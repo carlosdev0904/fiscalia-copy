@@ -129,7 +129,7 @@ Deno.serve(async (req) => {
       nome_razao_social: params.dados_empresa.razao_social,
       nome_fantasia: params.dados_empresa.nome_fantasia || params.dados_empresa.razao_social,
       email: params.dados_empresa.email,
-      telefone: params.dados_empresa.telefone.replace(/\D/g, '')
+      fone: params.dados_empresa.telefone.replace(/\D/g, '')
     };
 
     // Add optional fields only if provided
@@ -141,15 +141,16 @@ Deno.serve(async (req) => {
       registrationData.inscricao_estadual = params.dados_empresa.inscricao_estadual;
     }
 
-    // Build address object with required fields only
+    // Build address object matching Nuvem Fiscal spec exactly
     const endereco = {
       logradouro: params.dados_empresa.logradouro || 'Rua Principal',
       numero: params.dados_empresa.numero || '100',
       bairro: params.dados_empresa.bairro || 'Centro',
       codigo_municipio: params.dados_empresa.codigo_municipio || '3550308',
+      cidade: params.dados_empresa.municipio,
       uf: params.dados_empresa.uf.toUpperCase(),
-      codigo_pais: "1058",
-      pais: "Brasil",
+      codigo_pais: '1058',
+      pais: 'Brasil',
       cep: params.dados_empresa.cep ? params.dados_empresa.cep.replace(/\D/g, '') : '01000000'
     };
 
