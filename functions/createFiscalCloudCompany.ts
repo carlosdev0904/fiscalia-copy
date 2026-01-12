@@ -148,6 +148,8 @@ Deno.serve(async (req) => {
       bairro: params.dados_empresa.bairro || 'Centro',
       codigo_municipio: params.dados_empresa.codigo_municipio || '3550308',
       uf: params.dados_empresa.uf.toUpperCase(),
+      codigo_pais: "1058",
+      pais: "Brasil",
       cep: params.dados_empresa.cep ? params.dados_empresa.cep.replace(/\D/g, '') : '01000000'
     };
 
