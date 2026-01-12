@@ -197,12 +197,15 @@ Deno.serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.error('Nuvem Fiscal API Error:', JSON.stringify(errorData, null, 2));
+      console.error('Request data sent:', JSON.stringify(registrationData, null, 2));
+      
       let userMessage = 'Erro ao registrar empresa';
 
       if (response.status === 401 || response.status === 403) {
         userMessage = 'Erro de autenticação';
       } else if (response.status === 400) {
-        userMessage = errorData?.mensagem || 'Dados inválidos';
+        userMessage = errorData?.mensagem || errorData?.message || 'Dados inválidos';
       } else if (response.status === 409) {
         userMessage = 'Empresa já registrada';
       } else if (response.status >= 500) {
@@ -211,7 +214,8 @@ Deno.serve(async (req) => {
 
       return Response.json({
         status: "error",
-        message: userMessage
+        message: userMessage,
+        details: errorData
       }, { status: response.status });
     }
 
