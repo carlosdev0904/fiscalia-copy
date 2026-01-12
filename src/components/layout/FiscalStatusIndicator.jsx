@@ -19,22 +19,10 @@ export default function FiscalStatusIndicator({ companyId }) {
 
   const verifyMutation = useMutation({
     mutationFn: async () => {
-      // Simulate verification
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      if (status?.id) {
-        return base44.entities.FiscalIntegrationStatus.update(status.id, {
-          status: "conectado",
-          mensagem: "Conexão com a prefeitura estabelecida com sucesso",
-          ultima_verificacao: new Date().toISOString()
-        });
-      }
-      return base44.entities.FiscalIntegrationStatus.create({
-        company_id: companyId,
-        status: "conectado",
-        mensagem: "Conexão com a prefeitura estabelecida com sucesso",
-        ultima_verificacao: new Date().toISOString()
+      const { data } = await base44.functions.invoke('checkFiscalConnection', {
+        companyId
       });
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['fiscalStatus'] });

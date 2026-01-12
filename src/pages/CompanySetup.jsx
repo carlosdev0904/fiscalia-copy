@@ -116,7 +116,7 @@ export default function CompanySetup() {
       // If company has required data and not registered in Nuvem Fiscal yet
       if (savedCompany.cnpj && savedCompany.inscricao_municipal && !savedCompany.nuvem_fiscal_id) {
         try {
-          const { data: nuvemResult } = await base44.functions.invoke('criarEmpresaNuvemFiscal', {
+          const { data: nuvemResult } = await base44.functions.invoke('createFiscalCloudCompany', {
             companyId: savedCompany.id,
             dados_empresa: {
               razao_social: savedCompany.razao_social,
@@ -129,7 +129,7 @@ export default function CompanySetup() {
             }
           });
 
-          if (nuvemResult.success) {
+          if (nuvemResult.status === 'success') {
             await base44.entities.Notification.create({
               titulo: "Empresa registrada",
               mensagem: "Empresa registrada com sucesso na Nuvem Fiscal!",
