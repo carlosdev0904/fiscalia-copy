@@ -95,8 +95,7 @@ Deno.serve(async (req) => {
         body: tokenBody.toString()
       });
 
-      console.log("weesdfwefwefsdfwersdfsefs" ,tokenResponse);
-
+      
       if (!tokenResponse.ok) {
         const errorData = await tokenResponse.text();
         console.error('OAuth error:', errorData);
@@ -108,6 +107,7 @@ Deno.serve(async (req) => {
 
       const tokenData = await tokenResponse.json();
       nuvemFiscalToken = tokenData.access_token;
+      console.log("weesdfwefwefsdfwersdfsefs" ,nuvemFiscalToken);
 
       if (!nuvemFiscalToken) {
         return Response.json({
