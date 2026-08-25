@@ -1,0 +1,54 @@
+{
+  "name": "DAS",
+  "type": "object",
+  "properties": {
+    "referencia": {
+      "type": "string",
+      "description": "M\u00eas/ano de refer\u00eancia (ex: 12/2024)"
+    },
+    "valor_total": {
+      "type": "number",
+      "description": "Valor total da guia DAS"
+    },
+    "valor_inss": {
+      "type": "number",
+      "description": "Valor INSS"
+    },
+    "valor_icms": {
+      "type": "number",
+      "description": "Valor ICMS"
+    },
+    "valor_iss": {
+      "type": "number",
+      "description": "Valor ISS"
+    },
+    "data_vencimento": {
+      "type": "string",
+      "format": "date",
+      "description": "Data de vencimento"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendente",
+        "pago",
+        "atrasado"
+      ],
+      "default": "pendente",
+      "description": "Status do pagamento"
+    },
+    "codigo_barras": {
+      "type": "string",
+      "description": "C\u00f3digo de barras para pagamento"
+    },
+    "pdf_url": {
+      "type": "string",
+      "description": "URL do PDF da guia"
+    }
+  },
+  "required": [
+    "referencia",
+    "valor_total",
+    "data_vencimento"
+  ]
+}

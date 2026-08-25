@@ -1,0 +1,72 @@
+{
+  "name": "Company",
+  "type": "object",
+  "properties": {
+    "cnpj": {
+      "type": "string",
+      "description": "CNPJ da empresa"
+    },
+    "razao_social": {
+      "type": "string",
+      "description": "Raz\u00e3o social"
+    },
+    "nome_fantasia": {
+      "type": "string",
+      "description": "Nome fantasia"
+    },
+    "cidade": {
+      "type": "string",
+      "description": "Cidade/Munic\u00edpio"
+    },
+    "uf": {
+      "type": "string",
+      "description": "Estado"
+    },
+    "cnae_principal": {
+      "type": "string",
+      "description": "CNAE principal"
+    },
+    "regime_tributario": {
+      "type": "string",
+      "enum": [
+        "MEI",
+        "Simples Nacional",
+        "Lucro Presumido",
+        "Lucro Real"
+      ],
+      "description": "Regime tribut\u00e1rio"
+    },
+    "certificado_digital": {
+      "type": "boolean",
+      "default": false,
+      "description": "Certificado digital configurado"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email de contato"
+    },
+    "telefone": {
+      "type": "string",
+      "description": "Telefone de contato"
+    },
+    "inscricao_municipal": {
+      "type": "string",
+      "description": "Inscri\u00e7\u00e3o municipal"
+    },
+    "nuvem_fiscal_id": {
+      "type": "string",
+      "description": "ID da empresa na Nuvem Fiscal"
+    },
+    "nuvem_fiscal_registered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data de registro na Nuvem Fiscal"
+    }
+  },
+  "required": [
+    "cnpj",
+    "razao_social",
+    "cidade",
+    "regime_tributario"
+  ]
+}

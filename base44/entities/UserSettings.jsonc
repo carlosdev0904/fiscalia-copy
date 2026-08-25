@@ -1,0 +1,30 @@
+{
+  "name": "UserSettings",
+  "type": "object",
+  "properties": {
+    "theme": {
+      "type": "string",
+      "enum": [
+        "dark",
+        "light"
+      ],
+      "default": "dark",
+      "description": "Tema da interface"
+    },
+    "font_size": {
+      "type": "string",
+      "enum": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "default": "medium",
+      "description": "Tamanho da fonte"
+    },
+    "active_company_id": {
+      "type": "string",
+      "description": "ID da empresa ativa"
+    }
+  },
+  "required": []
+}

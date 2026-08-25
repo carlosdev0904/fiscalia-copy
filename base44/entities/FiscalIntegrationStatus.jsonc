@@ -1,0 +1,33 @@
+{
+  "name": "FiscalIntegrationStatus",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "ID da empresa"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "conectado",
+        "falha",
+        "verificando"
+      ],
+      "default": "verificando",
+      "description": "Status da conex\u00e3o com a prefeitura"
+    },
+    "mensagem": {
+      "type": "string",
+      "description": "Mensagem explicativa sobre o status"
+    },
+    "ultima_verificacao": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora da \u00faltima verifica\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "company_id",
+    "status"
+  ]
+}

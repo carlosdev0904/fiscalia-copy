@@ -1,0 +1,39 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "titulo": {
+      "type": "string",
+      "description": "T\u00edtulo da notifica\u00e7\u00e3o"
+    },
+    "mensagem": {
+      "type": "string",
+      "description": "Mensagem da notifica\u00e7\u00e3o"
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "sucesso",
+        "erro",
+        "alerta",
+        "info"
+      ],
+      "default": "info",
+      "description": "Tipo da notifica\u00e7\u00e3o"
+    },
+    "lida": {
+      "type": "boolean",
+      "default": false,
+      "description": "Notifica\u00e7\u00e3o lida"
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "ID da nota fiscal relacionada"
+    }
+  },
+  "required": [
+    "titulo",
+    "mensagem",
+    "tipo"
+  ]
+}
